@@ -582,6 +582,14 @@ Gspot.util = {
 	type = function(this)
 		return 'Gspot.element.'..this.elementtype
 	end,
+	
+	count = function(this, t)
+	  local n = 0
+	  for _ in pairs(t) do
+		n = n + 1
+	  end
+	  return n
+	end,
 }
 
 Gspot.element = {
@@ -721,77 +729,74 @@ setmetatable(Gspot.richtext, {__index = Gspot.util, __call = Gspot.richtext.load
 
 -- new: SiENcE richtext typetext integration
 Gspot.richtypetext = {
-load = function(this, Gspot, label, pos, parent, macros, defaultfont, updateinterval, debug)
-	-- enable richtypetext debug grid
-	if debug then rich.debug=true end
-	local element = Gspot:element('richtypetext', label, pos, parent)
-	element.richtypetext = rich:new( {label, element.pos.w, macros }, element.style.fg, defaultfont )
-	element.pos.h = element.richtypetext.height
-	element.lineheight = {}
-	for i, line in ipairs(element.richtypetext.lines) do
-		local height=nil
-		for j, fragment in ipairs(line) do
-			if fragment.type == 'string' then
-				if not height or height < fragment.height then height=fragment.height end
-			elseif fragment.type == 'img' then
-				if not height or height < fragment[1].height then height=fragment[1].height end
-			end
-			log.trace(i,fragment.type,fragment[1])
-		end
-		if height then
-			table.insert(element.lineheight,#element.lineheight+1,height)
-			log.trace('final-line-height:', #element.lineheight, height )
-		end
-	end
-	local linecount = table.count(element.richtypetext.textlines)
-	local nothingtodo = false
-	if linecount==0 then nothingtodo = true end
-	element.values = {lines = linecount, height=element.richtypetext.height, width=0, updateinterval_linecursor=0, linecursor=1, done = nothingtodo, updateinterval = updateinterval or 0.5 }
-	--element.updateinterval = updateinterval or 0.0042
-	element.update = function(this, dt)
-		if not this.values.done then
-			this.values.width = this.values.width + dt*this.values.updateinterval*this.pos.w
-			if this.values.width > this.pos.w then this.values.width = this.pos.w end
-			this.values.updateinterval_linecursor = this.values.updateinterval_linecursor + dt*this.values.updateinterval
-			if this.values.updateinterval_linecursor > 1 then
-				log.debug('linecursor', this.values.linecursor )
-				this.values.updateinterval_linecursor = 0
-				this.values.width = 0
-				this.values.linecursor = this.values.linecursor + 1
-				if this.values.lines-this.values.linecursor+1 <= 0 then
-					this.values.done = true
+	load = function(this, Gspot, label, pos, parent, macros, defaultfont, updateinterval, debug)
+		-- enable richtypetext debug grid
+		if debug then rich.debug=true end
+		local element = Gspot:element('richtypetext', label, pos, parent)
+		element.richtypetext = rich:new( {label, element.pos.w, macros }, element.style.fg, defaultfont )
+		element.pos.h = element.richtypetext.height
+		element.lineheight = {}
+		for i, line in ipairs(element.richtypetext.lines) do
+			local height=nil
+			for j, fragment in ipairs(line) do
+				if fragment.type == 'string' then
+					if not height or height < fragment.height then height=fragment.height end
+				elseif fragment.type == 'img' then
+					if not height or height < fragment[1].height then height=fragment[1].height end
 				end
 			end
-
-		end
-	end
-	return Gspot:add(element)
-end,
--- re-render pre-rendered image (1st time it's already done on creation in rich:new)
-render = function(this)
-	this.richtypetext:render()
-	this.richtypetext:render(true)
-end,
-draw = function(this, pos)
-	love.graphics.setBlendMode(this.style.imagemode)
-	love.graphics.setColor(this.style.fg)			 -- SiENcE: new
-	this.richtypetext:draw( pos.x, pos.y )
-	-- draw rectangle over canvas to hide canvas-text and slowly reveal line by line
-	if not this.values.done then
-		local r,g,b,a = love.graphics.getColor()
-		love.graphics.setColor(21, 21, 21, 255)
-		local lastheight=0
-		for i, height in ipairs(this.lineheight) do
-			if i == this.values.linecursor then
-				love.graphics.rectangle("fill", pos.x+this.values.width, pos.y+lastheight, this.pos.w, height)
-			elseif i > this.values.linecursor then
-				love.graphics.rectangle("fill", pos.x, pos.y+lastheight, this.pos.w, height)
+			if height then
+				table.insert(element.lineheight,#element.lineheight+1,height)
 			end
-			lastheight = lastheight+height
 		end
-		love.graphics.setColor(r,g,b,a)
-	end
-end,
+		local linecount = Gspot.util.count(this, element.richtypetext.textlines)
+		local nothingtodo = false
+		if linecount==0 then nothingtodo = true end
+		element.values = {lines = linecount, height=element.richtypetext.height, width=0, updateinterval_linecursor=0, linecursor=1, done = nothingtodo, updateinterval = updateinterval or 0.5 }
+		--element.updateinterval = updateinterval or 0.0042
+		element.update = function(this, dt)
+			if not this.values.done then
+				this.values.width = this.values.width + dt*this.values.updateinterval*this.pos.w
+				if this.values.width > this.pos.w then this.values.width = this.pos.w end
+				this.values.updateinterval_linecursor = this.values.updateinterval_linecursor + dt*this.values.updateinterval
+				if this.values.updateinterval_linecursor > 1 then
+					this.values.updateinterval_linecursor = 0
+					this.values.width = 0
+					this.values.linecursor = this.values.linecursor + 1
+					if this.values.lines-this.values.linecursor+1 <= 0 then
+						this.values.done = true
+					end
+				end
+
+			end
+		end
+		return Gspot:add(element)
+	end,
+	-- re-render pre-rendered image (1st time it's already done on creation in rich:new)
+	render = function(this)
+		this.richtypetext:render()
+		this.richtypetext:render(true)
+	end,
+	draw = function(this, pos)
+		love.graphics.setBlendMode(this.style.imagemode)
+		love.graphics.setColor(this.style.fg)			 -- SiENcE: new
+		this.richtypetext:draw( pos.x, pos.y )
+		-- draw rectangle over canvas to hide canvas-text and slowly reveal line by line
+		if not this.values.done then
+			local r,g,b,a = love.graphics.getColor()
+			love.graphics.setColor(21, 21, 21, 255)
+			local lastheight=0
+			for i, height in ipairs(this.lineheight) do
+				if i == this.values.linecursor then
+					love.graphics.rectangle("fill", pos.x+this.values.width, pos.y+lastheight, this.pos.w, height)
+				elseif i > this.values.linecursor then
+					love.graphics.rectangle("fill", pos.x, pos.y+lastheight, this.pos.w, height)
+				end
+				lastheight = lastheight+height
+			end
+			love.graphics.setColor(r,g,b,a)
+		end
+	end,
 }
 setmetatable(Gspot.richtypetext, {__index = Gspot.util, __call = Gspot.richtypetext.load})
 
