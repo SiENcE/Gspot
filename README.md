@@ -28,6 +28,11 @@
 ## Notes
 - Documentation is currently out of date, but demo code is commented, and should provide enough detail to get by. Wiki will be updates asap.
 
+## Supported LOVE2D versions
+- 0.8.0
+- 0.9.2
+- 0.10.+ needs smaller changes to textinput and other stuff
+
 ## license
 Copyright (c) 2012 trubblegum
 
