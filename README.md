@@ -1,4 +1,4 @@
-# Gspöt - a stateful GUI lib for LÖVE
+# GspÃ¶t - a stateful GUI lib for LÃ–VE
 
 ## What it does
 - range of one-line GUI elements, with default functionality and utility functions
@@ -6,8 +6,9 @@
 - element grouping and relative positioning
 - cascading element styles
 - timed element-level update functions
-- richtext support (add images to your text change colors and fonts)
+- richtext support (add images to your text, change colors and fonts per character)
 - typetexter
+- render to canvas to avoid performance loss
 
 ## Aims
 - easily implemented GUI elements for games and menus
@@ -19,7 +20,7 @@
 - lib\richtext.lua : required by Gspot
 - lib\Gspot.lua : the lib's only required file for your project
 - main.lua : commented demo
-- conf.lua : LÖVE config for demo
+- conf.lua : LÃ–VE config for demo
 - img.png : example image
 
 ## Start the Sample
