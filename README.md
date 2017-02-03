@@ -29,7 +29,7 @@
 - Documentation is currently out of date, but demo code is commented, and should provide enough detail to get by. Wiki will be updates asap.
 
 ## license
-Copyright (c) trubblegum
+Copyright (c) 2012 trubblegum
 
 Bugfixed an enhanced with richtext library by (c) 2017 Florian Fischer
 
