@@ -30,7 +30,10 @@
 
 ## license
 Copyright (c) trubblegum
+
 Bugfixed an enhanced with richtext library by (c) 2017 Florian Fischer
 
+
 Gspot is free to use under the Zlib/libpng license.
+
 Fragments attributed to vrld's Quickie : https://github.com/vrld/Quickie
