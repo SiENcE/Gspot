@@ -1,1 +1,1 @@
-love ./test/
+love ./sample/
