@@ -10,8 +10,26 @@ love.load = function()
 	love.graphics.setColor(255, 192, 0, 128) -- just setting these so we know the gui isn't stealing our thunder
 	
 	sometext = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-	
 	local textout = gui:typetext(sometext, {y = 32, w = 128})
+
+	local macros = {}
+	macros.white = {255, 255, 255}
+	macros.blue = {128, 128, 255}
+	macros.green = {0, 255, 0}
+	macros.red   = {255, 0, 0}
+	macros.fontBig = love.graphics.newFont(60)
+	macros.fontCyrillic = love.graphics.newFont(14)	-- use a cyrillic ttf here!
+	macros.fontMed = love.graphics.newFont(12)
+	macros.fontSmall = love.graphics.newFont(8)
+	macros['Harro_71.png'] = love.graphics.newImage('img.png')
+	local message = [[
+	Hello, {green}im {red}{fontBig}Richtext{fontMed} {Harro_71.png}
+	{white}UTF8 german: {green}Ähnlichkeit mit Übungen ist Öffentlich.
+	{fontCyrillic}{white}UTF8 cyrillic: {red}а б в г д е ё ж з и й к л м н о
+	{fontSmall}{green}V{red}i{green}v{red}a{green}m{red}u{green}s {red}commodo ultricies scelerisque. In hac habitasse platea dictumst.
+	{fontMed}{blue}Fusce tempor euismod mollis. Ut lobortis {white}commodo {green}nulla, ac adipiscing urna auctor quis. Cras facilisis cursus metus, vel cursus leo posuere non. Aliquam sit amet vulputate orci. Vivamus ut ante ante, {red}{green}non {fontSmall}{red}hendrerit {blue}quam. {white}Cras{white} ligula libero, {green}{white}elementum{green}{white} id posuere sollicitudin, gravida ut nibh
+	]]
+	local richtext = gui:richtext( message,	{x=120, y = 140, w = 400}, nil, macros, macros.fontMed )
 	
 	-- button
 	local button = gui:button('A Button', {x = 128, y = gui.style.unit, w = 128, h = gui.style.unit}) -- a button(label, pos, optional parent) gui.style.unit is a standard gui unit (default 16), used to keep the interface tidy
@@ -89,9 +107,9 @@ love.load = function()
 	
 	for i = 1, 8 do
 		loader:add(function() return scrollgroup:addchild(gui:text(sometext, {w = 128}), 'grid') end)
-		--gui:text(sometext, {w = 128}) -- if not autosize, Gspot wraps text to element.pos.w and adjusts element.pos.h to fit it in
-		--element:addchild(element, 'vertical') -- using the autostack flag to reposition below existing child elements
-		--the two lines above accomplish the same as gui:text(str, {y = scrollgroup:getmaxh(), w = 128}, scrollgroup)
+		 --gui:text(sometext, {w = 128}) -- if not autosize, Gspot wraps text to element.pos.w and adjusts element.pos.h to fit it in
+		 --element:addchild(element, 'vertical') -- using the autostack flag to reposition below existing child elements
+		 --the two lines above accomplish the same as gui:text(str, {y = scrollgroup:getmaxh(), w = 128}, scrollgroup)
 	end
 	
 	-- additional scroll controls
