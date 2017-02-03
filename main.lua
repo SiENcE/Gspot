@@ -1,4 +1,4 @@
-gui = require('Gspot') -- import the library
+gui = require('lib/Gspot') -- import the library
 --mainmenu = gui() -- create a gui instance. don't have to do this, but you may want a gui for each gamestate so they can talk to each other, and you won't have to recontsruct the gui every time you enter a state
 
 font = love.graphics.newFont(192)
