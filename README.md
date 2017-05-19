@@ -23,6 +23,10 @@
 - conf.lua : LÖVE config for demo
 - img.png : example image
 
+## Cloning
+usage:
+> git clone git@github.com:SiENcE/Gspot.git --recurse-submodules
+
 ## Start the Sample
 - checkout https://github.com/SiENcE/richtext and put into the lib/ folder to start the sample
 
