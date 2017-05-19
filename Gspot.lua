@@ -115,9 +115,10 @@ Gspot.draw = function(this)
 	for i, element in ipairs(this.elements) do
 		if element.display then
 			local pos, scissor = element:getpos()
-			if scissor and _globalScale_ then	-- SiENcE: new
-				love.graphics.setScissor(scissor.x*_globalScale_.x, scissor.y*_globalScale_.y, scissor.w*_globalScale_.x, scissor.h*_globalScale_.y)	-- SiENcE: new
-			elseif scissor then	-- SiENcE: new
+			--if scissor and _globalScale_ then	-- SiENcE: new
+			--	love.graphics.setScissor(scissor.x*_globalScale_.x, scissor.y*_globalScale_.y, scissor.w*_globalScale_.x, scissor.h*_globalScale_.y)	-- SiENcE: new
+			--else
+			if scissor then	-- SiENcE: new
 				love.graphics.setScissor(scissor.x, scissor.y, scissor.w, scissor.h)
 			end	-- SiENcE: new
 			love.graphics.setFont(element.style.font)
@@ -582,7 +583,7 @@ Gspot.util = {
 	type = function(this)
 		return 'Gspot.element.'..this.elementtype
 	end,
-	
+
 	count = function(this, t)
 	  local n = 0
 	  for _ in pairs(t) do
